@@ -1,0 +1,1412 @@
+Dep Specs                                              DEP Working Group
+RFC: 0248                                                     April 5785
+
+
+                    Self-Attestation Identity Format
+
+
+Abstract
+
+   This document defines a structured self-attestation format for
+   describing one's relationship to Jewish identity, practice, and
+   culture. Identity blocks are human-authored, machine-recognizable,
+   and semantically opaque. The format provides vocabulary for self-
+   description without claiming to verify or validate the assertions
+   contained within.
+
+
+Status of This Memo
+
+   This document is a Draft Derech Eretz Protocol.
+
+   Draft documents are working documents and may be updated, replaced,
+   or obsoleted at any time. It is inappropriate to cite this document
+   as other than a work in progress.
+
+   Distribution of this memo is unlimited.
+
+
+Table of Contents
+
+   1. Motivation
+   2. Scope
+   3. Conceptual Model
+      3.1. Descriptive, Not Prescriptive
+   4. Block Syntax
+      4.1. Block Delimiters
+         4.1.1. Version Header Format
+      4.2. Content
+      4.3. Size Limits
+      4.4. Character Set
+      4.5. Case Sensitivity
+   5. Notation System
+      5.1. Formal Grammar
+         5.1.1. Terminology
+         5.1.2. Grammar
+         5.1.3. Precedence
+      5.2. CamelCase Rule
+      5.3. Versioned Vocabulary
+      5.4. Modifiers
+         5.4.1. Polarity and Intensity
+         5.4.2. Special Modifiers
+         5.4.3. Modifier Repetition
+         5.4.4. Modifier Position
+      5.5. Operators
+         5.5.1. Sub-Specification
+         5.5.2. Transition
+         5.5.3. Blend
+         5.5.4. Disjunction
+         5.5.5. Conjunction
+         5.5.6. Additive
+      5.6. Grouping
+         5.6.1. Expression Grouping
+         5.6.2. Conditional Variation
+      5.7. Scope Markers
+         5.7.1. Family Context (`^`)
+         5.7.2. Communal Context (`@`)
+         5.7.3. Scope Marker Position
+      5.8. Order Is Meaningful
+      5.9. Absence vs Negation
+   6. Category Codes (Version 1.0)
+      6.1. Background
+      6.2. Denomination
+      6.3. Ethnicity / Heritage
+      6.4. Practice: Kashrut
+      6.5. Practice: Dietary
+      6.6. Practice: Shabbat
+      6.7. Practice: Holidays
+      6.8. Practice: Prayer
+      6.9. Knowledge: Hebrew
+      6.10. Knowledge: Text
+      6.11. Knowledge: Languages
+      6.12. Community
+      6.13. Identity: Cultural
+      6.14. Identity: Religious
+      6.15. Identity: Relationship to G-d
+      6.16. Israel
+      6.17. Zionism
+   7. Parsing
+      7.1. Tokenization
+      7.2. CamelCase Parsing
+      7.3. Unknown Codes
+      7.4. Structural Requirements
+   8. Semantics
+      8.1. Subjectivity
+      8.2. No Semantic Equivalence
+      8.3. Order Preservation
+      8.4. Values Are Not Verifiable
+   9. Examples
+      9.1. Basic Example
+      9.2. Mixed Heritage
+      9.3. Transition
+      9.4. Contextual
+      9.5. Decline to State
+      9.6. Jew-ish
+      9.7. Complex Grouping
+      9.8. Communal Context
+      9.9. Mixed Contexts
+   10. Security Considerations
+   11. Acknowledgements
+   12. Discussion Archive
+
+
+1. Motivation
+
+   Identity is frequently asserted but rarely formalized by the
+   individual. Systems that process identity typically rely on external
+   attestation: documents issued by authorities, credentials verified by
+   institutions, or claims validated by third parties.
+
+   Jewish identity presents particular challenges for such systems.
+   Status may derive from lineage, conversion, communal acceptance, or
+   self-identification. Different authorities recognize different
+   criteria. The same individual may be considered Jewish by some
+   communities and not by others.
+
+   This specification addresses this by providing a format for self-
+   attestation. The individual describes their own relationship to
+   Jewish identity using a structured notation. The format makes no
+   claim about the truth or validity of these assertions. It provides
+   vocabulary, not verification.
+
+2. Scope
+
+   This specification defines:
+
+   o the syntax of identity blocks,
+
+   o the category codes and modifiers available in version 1.0,
+
+   o the formal grammar for parsing tokens,
+
+   o and the rules for parsing and accepting identity blocks.
+
+   This specification does not define:
+
+   o what constitutes Jewish identity,
+
+   o the meaning or validity of any assertion,
+
+   o semantic equivalence between blocks,
+
+   o or any verification mechanism.
+
+3. Conceptual Model
+
+   An identity block represents:
+
+   a self-authored description of one's relationship to Jewish identity,
+   practice, and culture.
+
+   An identity block does not represent:
+
+   o external verification of status,
+
+   o institutional recognition,
+
+   o or any claim binding on third parties.
+
+   Identity blocks are self-certified. The author is the sole authority
+   on the content. Consuming systems MUST NOT treat identity blocks as
+   verified identity claims.
+
+3.1. Descriptive, Not Prescriptive
+
+   This specification describes the format of identity blocks. It does
+   not prescribe how they must be written or enforce conformance.
+
+   The specification provides vocabulary. Usage establishes convention.
+
+4. Block Syntax
+
+
+4.1. Block Delimiters
+
+   An identity block is delimited by header and footer lines:
+
+       -----BEGIN JEW CODE BLOCK-----
+   Version: 1.0
+
+   [content]
+
+   -----END JEW CODE BLOCK-----
+
+   The version header is REQUIRED.
+
+4.1.1. Version Header Format
+
+   The version header consists of:
+   o The string Version: (case-sensitive)
+   o Optional whitespace
+   o The version number
+
+   The header name MUST be capitalized as shown. Implementations MUST
+   accept zero or more spaces between the colon and the version number.
+   Implementations MUST NOT accept lowercase version: or other case
+   variations.
+
+   Valid: Version: 1.0, Version:1.0, Version:  1.0
+
+   Invalid: version: 1.0, VERSION: 1.0
+
+4.2. Content
+
+   Block content consists of tokens separated by whitespace.
+
+       Bj O+ K+ Sh+ Ho- Pr+ He:Mo+ Tx+ Cm+ Cu++ Rl+ G*
+
+   Whitespace (spaces, tabs, newlines) separates tokens. Whitespace
+   within a token is not permitted.
+
+4.3. Size Limits
+
+   Implementations SHOULD support blocks up to 512 bytes.
+
+   Implementations MAY support longer blocks.
+
+4.4. Character Set
+
+   Identity blocks use ASCII characters only.
+
+4.5. Case Sensitivity
+
+   Case is significant. All codes use CamelCase notation (see Section
+   5.2).
+
+5. Notation System
+
+
+5.1. Formal Grammar
+
+
+5.1.1. Terminology
+
+   Term        Definition                      Example
+       ----------  ------------------------------  ---------------------
+       Token       Whitespace-separated unit       ^[~As]\|Mi
+       Expression  Combination of terms + opera..  As\|Mi, ~AsHo
+       Term        Operand — atom, compound, or..  As, AsHo, [~As]
+       Atom        Single code                     As, O, Sh
+       Compound    Atoms joined by juxtaposition   AsHo = As & Ho
+       Group       Bracketed expression            [~As]
+       Code        CamelCase identifier            As, Mo, Bj
+       Scope       Marker for relational context   ^, ^^, @, @@
+       Modifier    Symbol altering meaning         +, -, ~, ?, *, !, #
+       Operator    Binary combiner                 :, /, \|, &, <>, &..
+
+5.1.2. Grammar
+
+   token      := scope? modifier* expression modifier* expression :=
+   term (operator term)* term       := compound | group compound   :=
+   modifier* atom modifier* (atom)* group      := '[' modifier*
+   expression modifier* ']' atom       := code code       := [A-Z][a-z]*
+   operator   := ':' | '/' | '|' | '&' | '<>' | '>' scope      := '^' |
+   '^^' | '^^^' | '@' | '@@' | '@@@' modifier   := '~' | '~~' | '~~~'
+               | '?' | '??' | '???'
+               | '*' | '**' | '***'
+               | '!' | '!!' | '!!!'
+               | '#' | '##' | '###'
+               | '+' | '++' | '+++'
+               | '-' | '--' | '---'
+
+5.1.3. Precedence
+
+   From tightest to loosest binding:
+
+   o Grouping — CamelCase boundaries, juxtaposition (implicit
+     conjunction)
+
+   o Sub-specification — :
+
+   o Combiners — /, |, &, <>
+
+   o Transition — >
+
+   o Modifiers — applied to whole token
+
+   Binary operators associate left-to-right.
+
+5.2. CamelCase Rule
+
+   Every code starts with a capital letter. Lowercase continues the
+   current code; uppercase starts a new code.
+
+       OC      → O, C
+   AsSeMi  → As, Se, Mi ShHo    → Sh, Ho O:HaSat → O:(Ha, Sat)
+
+   Juxtaposition within a token implies conjunction:
+
+       Expression  Meaning
+       ----------  -------------------------
+       OC          O & C (compound)
+       O C         O and C (separate tokens)
+
+   The compound form implies unified identity ("Conservadox"). Separate
+   tokens imply distinct claims ("I am Orthodox. I am also
+   Conservative.").
+
+5.3. Versioned Vocabulary
+
+   Version 1.0 defines a closed set of codes. Implementations MUST
+   recognize codes defined in this specification. Unknown codes are
+   parsing errors.
+
+   Sub-specifiers (after :) remain open. Implementations SHOULD accept
+   unlisted sub-specifiers.
+
+5.4. Modifiers
+
+
+5.4.1. Polarity and Intensity
+
+   Modifier  Meaning
+       --------  ----------------------
+       +         Positive / more / yes
+       ++        Strongly positive
+       +++       Very strongly positive
+   o         Negative / less / no
+       --        Strongly negative
+       ---       Very strongly negative
+
+5.4.2. Special Modifiers
+
+   Modifier  Meaning
+       --------  ------------------------------
+       ?         Uncertain / questioning (epi..
+       ~         Approximate / "-ish" (knows ..
+   o         Complicated (not reducible t..
+       !         Intense feelings (may combin..
+       #         Decline to state (intentiona..
+
+   The ~ modifier means "-ish" — a loose, approximate, or tentative
+   relationship to the category. It is distinct from ?. Uncertain (?)
+   indicates the author does not know their own position. Approximate
+   (~) indicates the author knows exactly what they are doing; it is
+   simply not rigorous.
+
+   Examples: G? (questioning relationship to G-d), K~ (kosher-ish), B#
+   (background: decline to state).
+
+5.4.3. Modifier Repetition
+
+   Modifiers may repeat up to three times for emphasis or intensity:
+
+       Modifier  × 1               × 2                 × 3
+       --------  ----------------  ------------------  -----------------
+       ~         Approximate       Very approximate    Extremely hedged
+       ?         Uncertain         Very uncertain      Deeply uncertain
+   o         Complicated       Really complicated  Don't even ask
+       !         Intense           Very intense        Extremely intense
+       #         Decline to state  Firmly decline      How dare you ask
+       +         Positive          Strongly positive   Very strongly pos
+   o         Negative          Strongly negative   Very strongly
+     negative
+
+   Examples: ~~Ji+ (very hesitantly Jew-ish, positive), G###
+   (relationship to G-d: how dare you ask).
+
+5.4.4. Modifier Position
+
+   Modifiers may appear at the leading (prefix) or trailing (postfix)
+   position of a token. These positions carry distinct meaning:
+
+       Position  Dimension  Question
+       --------  ---------  ------------------------------
+       Prefix    Salience   How central is this category..
+       Postfix   Level      Where do I fall within this ..
+
+   Prefix modifiers indicate how important or central this dimension is
+   to one's identity — whether it's something you think about, care
+   about, or define yourself by.
+
+   Postfix modifiers indicate your position on the spectrum — where you
+   fall, how you practice, what level you're at.
+
+   Examples:
+
+       Expression  Reading
+       ----------  ------------------------------
+       K++         I keep very kosher (level is..
+       ++K         Kashrut is very central to m..
+       ++K++       Kashrut is central to me AND..
+       +++Z+       Zionism is extremely importa..
+       +++Z---     Anti-Zionism is core to my i..
+       +Z+++       Zionism isn't particularly c..
+       ?K          Questioning whether kashrut ..
+       K?          I engage with kashrut, uncer..
+       ~O          Approximately Orthodox — not..
+       O~          Orthodox, loosely — the labe..
+
+   Both positions may be used together. +++K- expresses: "Kashrut is
+   extremely central to my identity, but I don't keep kosher" — coherent
+   for someone who grew up very kosher, left observance, but for whom
+   kashrut remains a charged topic.
+
+   Modifiers between codes within a compound are invalid. For per-code
+   modifiers, use separate tokens:
+
+       Form    Valid  Notes
+       ------  -----  ------------------------------
+       ++OC++  Yes    High salience, high level fo..
+       OC++    Yes    High level (default salience)
+       ++OC    Yes    High salience (default level)
+       O+C     No     Use O+ C (two tokens)
+
+   Implementations MUST preserve the exact form and MUST NOT normalize
+   positions. Form is part of the self-description (see Section 5.8).
+
+5.5. Operators
+
+
+5.5.1. Sub-Specification
+
+   The : operator introduces sub-specification:
+
+       Pattern  Meaning
+       -------  ------------------------------
+       A:x      Category A, sub-type x
+       A:xy     Category A, sub-types x and ..
+
+   Sub-specifiers chain left-to-right: O:Ha:Sat = (O:Ha):Sat.
+
+   Examples: He:Mo (Modern Hebrew), O:Mo (Modern Orthodox), O:Ha:Sat
+   (Satmar Hasidic).
+
+5.5.2. Transition
+
+   The > operator indicates transition or change:
+
+       Pattern  Meaning
+       -------  ------------------------------
+       A>B   Was A, now B
+       >B    Becoming B (origin unspecifi..
+       A>    Was A, current state unspeci..
+
+   Transitions chain: O>C>R = was Orthodox, then Conservative, now
+   Reform.
+
+   When one operand contains only modifiers, the code is inherited from
+   the other operand:
+
+   o K++>+++ — Very kosher, becoming stricter (right inherits K)
+
+   o ++>K+++ — Was very, now very strictly kosher (left inherits K)
+
+   o Sh+>-- — Was Shabbat observant, now not (right inherits Sh)
+
+5.5.3. Blend
+
+   The / operator indicates blending or mixture:
+
+       Pattern  Meaning
+       -------  ------------------------------
+       A/B      Blended between A and B, fuz..
+
+   Examples: O/C (Conservadox — somewhere between Orthodox and
+   Conservative), As/Se (blended Ashkenazi-Sephardi heritage).
+
+5.5.4. Disjunction
+
+   The | operator indicates contextual variation:
+
+       Pattern  Meaning
+       -------  ---------------------------
+       A\|B     A or B depending on context
+
+   Examples: O|C (Orthodox in some contexts, Conservative in others),
+   ^As|Se (Ashkenazi on one side of family, Sephardi on the other).
+
+   Disjunction indicates peer alternatives — contexts of equal standing.
+   For patterns with a primary state and exceptions, see Conditional
+   Variation (5.6.2).
+
+       Pattern  Reading
+       -------  ------------------------------
+       K++\|K+  Very kosher at home, kosher ..
+       K++(-)   Kosher, but not under certai..
+
+5.5.5. Conjunction
+
+   The & operator indicates full conjunction:
+
+       Pattern  Meaning
+       -------  ------------------
+       A&B  Fully both A and B
+
+   Explicit conjunction is rarely needed since juxtaposition implies
+   conjunction. Use & for emphasis or clarity.
+
+5.5.6. Additive
+
+   The <> operator indicates layering:
+
+       Pattern     Meaning
+       ----------  -----------------------------
+       A<B>  A foundation with B additions
+
+   Examples: O<R> (Orthodox foundation with Reform influences).
+
+5.6. Grouping
+
+
+5.6.1. Expression Grouping
+
+   Square brackets [] group sub-expressions that need their own
+   modifiers:
+
+       Expression    Meaning
+       ------------  ------------------------------
+       ~As\|Mi       ~(As | Mi) — approximately (..
+       [~As]\|Mi     (~As) | Mi — approximately-A..
+       [As+]\|[Mi-]  (As+) | (Mi-) — positive-Ash..
+
+   Brackets create a unit. Modifiers outside the brackets apply to that
+   unit as a whole, following normal prefix (salience) / postfix (level)
+   semantics:
+
+       Expression    Meaning
+       ------------  ------------------------------
+       K?!           K is uncertain + intense (bo..
+       [?K]!         [uncertain-K] is intense — i..
+       ![?K]         [uncertain-K] is salient — t..
+       [?K]! vs K?!  Different: nested vs indepen..
+
+   Example: Someone whose uncertainty about kashrut is itself a charged,
+   identity-defining topic would write ![?K]! — the uncertainty is both
+   salient (prefix) and intense (postfix).
+
+   Groups cannot be juxtaposed with compounds. Juxtaposition (implicit
+   conjunction) only works between codes within a compound. To combine a
+   group with other terms, use an explicit operator:
+
+       Expression  Valid  Reason
+       ----------  -----  ------------------------------
+       AsHo        ✓      Codes juxtaposed within comp..
+       K++\|[K]--  ✓      Explicit operator between te..
+       K++[K]--    ✗      Group juxtaposed with compound
+
+5.6.2. Conditional Variation
+
+   Parentheses () indicate conditional or circumstantial variation:
+
+       Pattern  Meaning
+       -------  ------------------------------
+       A(B)     A normally, B under certain ..
+
+   Examples:
+
+   o K+(-) — Kosher, not under certain conditions
+
+   o Sh+(--) — Shabbat observant, completely off when traveling
+
+   o Ho-(++) — Loosely observant, very strict on specific holidays
+
+   When the conditional contains only modifiers (no code), the modifiers
+   apply to the parent code:
+
+   o G?(!!) — Questioning relationship to G-d, with very intense moments
+     (inherits G)
+
+   Unlike disjunction (|), which indicates peer alternatives,
+   conditional variation implies a primary state with exceptions. The
+   first term is the baseline; the parenthetical is the deviation.
+
+       Pattern  Reading
+       -------  ------------------------------
+       K++(-)   Kosher, but not under certai..
+       K++\|K-  Very kosher in some contexts..
+
+5.7. Scope Markers
+
+   Scope markers indicate whose identity is being described. Unlike
+   modifiers (which alter meaning), scope markers change the relational
+   context.
+
+   Scope markers are figurative. They describe relational context that
+   shapes identity, not literal facts about specific people or
+   institutions.
+
+5.7.1. Family Context (`^`)
+
+   The ^ scope marker indicates family context — the familial
+   environment that shaped one's identity. Repetition indicates depth or
+   distance:
+
+       Scope  Examples
+       -----  ------------------------------
+       ^      Parents, siblings, immediate..
+       ^^     Grandparents, aunts/uncles, ..
+       ^^^    Great-grandparents, ancestra..
+
+   The specification does not define what constitutes family. This is
+   intentional. ^ may refer to biological family, adoptive family,
+   chosen family, or any familial context the author considers
+   formative.
+
+   Examples:
+
+       Expression  Meaning
+       ----------  ------------------------------
+       ^O R        Family context was Orthodox,..
+       ^^O R       Extended family was Orthodox..
+       ^OC>R    Family's journey was Conserv..
+       ^As\|Se     Ashkenazi on one side, Sepha..
+
+   The ^X|Y pattern expresses mixed family heritage. The | operator
+   means "one or the other depending on context" — here, which side of
+   the family.
+
+5.7.2. Communal Context (`@`)
+
+   The @ scope marker indicates communal context — the community
+   environment that shapes one's identity. Repetition indicates broader
+   scope:
+
+       Scope  Examples
+       -----  ------------------------------
+       @      Immediate community — shul, ..
+       @@     Broader community — movement..
+       @@@    Widest context — klal yisrae..
+
+   The specification does not define what constitutes a community. This
+   is intentional. @ may refer to a synagogue, a chavurah, an online
+   community, a learning group, or any communal context the author
+   considers formative.
+
+   Examples:
+
+       Expression  Meaning
+       ----------  ------------------------------
+       @O R        Community context is Orthodo..
+       @K+ K~      Community is kosher-observan..
+       ^As @Se     Family Ashkenazi, in a Sepha..
+       ^O @C R     Family Orthodox, community C..
+
+   The communal context marker describes how community shapes identity —
+   not institutional membership or official affiliation.
+
+   The @ scope marker describes what your community is, not how involved
+   you are. For involvement level, see Cm (6.12).
+
+5.7.3. Scope Marker Position
+
+   Scope markers appear only at the beginning of a token, before any
+   modifiers.
+
+5.8. Order Is Meaningful
+
+   Order within an expression carries meaning:
+
+       Expression  Connotation
+       ----------  ------------------------------
+       O/C         Orthodox-leaning Conservadox
+       C/O         Conservative-leaning Conserv..
+       As\|Mi      Ashkenazi primary context
+       Mi\|As      Mizrachi primary context
+
+   Order is part of the self-description. Implementations MUST NOT
+   normalize or reorder expressions.
+
+5.9. Absence vs Negation
+
+   The specification describes what someone IS, not what they AREN'T.
+
+   o O- = negative disposition toward Orthodox
+
+   o (omit O) = Orthodox not relevant to my identity
+
+   Absence is expressed by omission. The - modifier indicates stance,
+   not absence.
+
+6. Category Codes (Version 1.0)
+
+
+6.1. Background
+
+   Code  Meaning
+       ----  -------------------------
+       Bj    Born Jewish (matrilineal)
+       Bp    Patrilineal
+       Bc    Convert
+       Ba    Adopted
+       B?    Unknown / complicated
+       B#    Decline to state
+
+   The B# code exists because converts are under no obligation to
+   disclose conversion status. Implementations MUST NOT treat B# as
+   suspicious or incomplete.
+
+   Background codes may be combined with modifiers and operators:
+
+   o Bc+ — Convert, positive identification
+
+   o Bc>Bj — Convert, transition complete
+
+   o >Bc — In process of conversion
+
+   o ?>Bc — Considering conversion
+
+   o Bj^Bc — Born Jewish, parents were converts
+
+6.2. Denomination
+
+   Code  Meaning
+       ----  ------------------------------
+       O     Orthodox
+       C     Conservative
+       M     Masorti
+       R     Reform
+       Rc    Reconstructionist
+       Rn    Renewal
+       Hu    Humanist
+       S     Secular
+       Pd    Post-denominational
+       Jj    "Just Jewish"
+       Ji    Jew-ish (casual identificati..
+       D?    Unaffiliated / unknown
+       D#    Decline to state
+
+   Compounds express blended affiliation:
+
+   o OC — Conservadox (Orthodox and Conservative)
+
+   o O/C — Between Orthodox and Conservative
+
+   o O\|C — Orthodox or Conservative depending on context
+
+   Orthodox sub-movements use : notation:
+
+   o O:Ha — Hasidic
+
+   o O:Ch — Chabad
+
+   o O:Mo — Modern Orthodox
+
+   o O:Yv — Yeshivish
+
+   Hasidic dynasties may be further specified:
+
+   o O:HaSat — Satmar (juxtaposition: Ha + Sat)
+
+   o O:HaBz — Breslov
+
+6.3. Ethnicity / Heritage
+
+   Code  Meaning
+       ----  -----------------------
+       As    Ashkenazi
+       Se    Sephardi
+       Mi    Mizrachi
+       Ye    Yemenite (Teimani)
+       Et    Ethiopian (Beta Israel)
+       It    Italian (Italki)
+       Ro    Romaniote
+       In    Indian
+       Ka    Kaifeng
+       Eo    Other
+       E?    Unknown
+       E#    Decline to state
+
+   Mixed heritage:
+
+   o As/Se — Blended Ashkenazi-Sephardi
+
+   o AsSe — Compound Ashkenazi-Sephardi identity
+
+   o ^As\|Se — Ashkenazi on one side, Sephardi on the other
+
+   Converts adopting a tradition: Bc:As (Convert, following Ashkenazi
+   tradition).
+
+6.4. Practice: Kashrut
+
+   Code  Meaning
+       ----  -------------------
+       K     Kashrut (religious)
+
+   Standard modifiers apply:
+
+   o K — Keeps kosher
+
+   o K++ — Very strict
+
+   o K~ — Kosher-ish
+
+   o K+(-) — Kosher normally, not under certain conditions
+
+   o K>K+ — Becoming more observant
+
+   o ^K++ K- — Family very strict, individual not
+
+6.5. Practice: Dietary
+
+   Code   Meaning
+       -----  ------------
+       Di:V   Vegetarian
+       Di:Vg  Vegan
+       Di:P   Pescatarian
+       Di:Gf  Gluten-free
+       Di:Lf  Lactose-free
+       Di:Fm  Low FODMAP
+
+   Dietary codes are separate from kashrut. They may be combined:
+
+   o K++ Di:VgGf — Very kosher, vegan, gluten-free
+
+   o K- Di:Vg — Not kosher, but vegan
+
+6.6. Practice: Shabbat
+
+   Code  Meaning
+       ----  ------------------
+       Sh    Shabbat observance
+
+   Examples:
+
+   o Sh++ — Very observant (full traditional observance)
+
+   o Sh+ — Observant
+
+   o Sh- — Loosely observant (Friday dinner, perhaps)
+
+   o Sh-- — Not observant
+
+   o Sh\| — Contextual (observant with family, not alone)
+
+   o Sh++>Sh- — Was very observant, now loosely
+
+   o ^Sh++ Sh- — Family very observant, individual not
+
+   o Sh+(--) — Observant normally, completely off when traveling
+
+   o Sh* — Complicated (doesn't fit a spectrum)
+
+6.7. Practice: Holidays
+
+   Code  Meaning
+       ----  ------------------
+       Ho    Holiday observance
+
+   Examples:
+
+   o Ho++ — Very observant (all holidays, traditional observance)
+
+   o Ho+ — Observant
+
+   o Ho- — Loosely observant (typically High Holidays only)
+
+   o Ho-- — Not observant
+
+   o Ho-(++) — Loosely observant, very strict on specific holidays
+
+   o ^Ho++ Ho- — Family observes all holidays, individual does not
+
+6.8. Practice: Prayer
+
+   Code  Meaning
+       ----  ---------------
+       Pr    Prayer practice
+
+   Prayer practice is independent of belief in G-d (see section 6.15).
+
+   Examples:
+
+   o Pr++ — Very committed (daily davening)
+
+   o Pr+ — Regular prayer practice
+
+   o Pr- — Occasional prayer
+
+   o Pr-- — No prayer practice
+
+   o Pr++ G- — Davens daily, agnostic
+
+   o Pr-- G++ — Never prays formally, strong believer
+
+6.9. Knowledge: Hebrew
+
+   Code   Meaning
+       -----  ----------------------------
+       He     Hebrew literacy (general)
+       He:Mo  Modern Hebrew
+       He:Bi  Biblical / liturgical Hebrew
+
+   Examples: He:MoBi- (strong Modern, weak Biblical).
+
+6.10. Knowledge: Text
+
+   Code  Meaning
+       ----  ----------------
+       Tx    Textual literacy
+
+   Textual literacy refers to familiarity with Jewish texts: Torah,
+   Talmud, Midrash, commentaries, and related literature.
+
+   Examples:
+
+   o Tx++ — Very knowledgeable (extensive study)
+
+   o Tx+ — Knowledgeable
+
+   o Tx- — Limited familiarity
+
+   o Tx-- — No familiarity
+
+   o Tx+>Tx++ — Currently increasing study
+
+6.11. Knowledge: Languages
+
+   Code  Meaning
+       ----  ---------
+       Lg    Languages
+
+   Common language sub-specifiers:
+
+       Code  Language
+       ----  ------------
+       He    Hebrew
+       Yi    Yiddish
+       Ld    Ladino
+       Hk    Haketia
+       Ja    Judeo-Arabic
+       Ar    Aramaic
+
+   Examples: Lg:HeYi (Hebrew and Yiddish), Lg:Yi+ (strong Yiddish).
+
+6.12. Community
+
+   Code  Meaning
+       ----  ---------------------
+       Cm    Community involvement
+
+   Examples:
+
+   o Cm++ — Very involved (leadership roles, regular participation)
+
+   o Cm+ — Involved
+
+   o Cm- — Peripherally involved
+
+   o Cm-- — Not involved
+
+   o Cm+(-) — Involved, sometimes withdrawn
+
+   Cm describes involvement level — how active you are in community
+   life. For communal context (what your community is), see scope
+   markers (5.7.2).
+
+       Expression      Reading
+       --------------  ------------------------------
+       @O Cm++         Community is Orthodox, very ..
+       @O Cm-          Community is Orthodox, perip..
+       @O|@R Cm++      Orthodox or Reform community..
+       @O Cm++ @R Cm-  Very involved in Orthodox co..
+
+6.13. Identity: Cultural
+
+   Code  Meaning
+       ----  -----------------------
+       Cu    Cultural identification
+
+   Cultural identification refers to connection with Jewish culture:
+   food, humor, music, literature, history, and social patterns,
+   independent of religious practice.
+
+   Examples:
+
+   o Cu++ — Very strong cultural identification
+
+   o Cu+ — Strong cultural identification
+
+   o Cu- — Weak cultural identification
+
+   o Cu-- — No cultural identification
+
+   o Cu+++ — Jewish culture is central to identity
+
+6.14. Identity: Religious
+
+   Code  Meaning
+       ----  ------------------------
+       Rl    Religious identification
+
+   Religious identification refers to self-understanding as religiously
+   Jewish, distinct from cultural identification and from belief in G-d.
+
+   Examples:
+
+   o Rl++ — Very strong religious identification
+
+   o Rl+ — Strong religious identification
+
+   o Rl- — Weak religious identification
+
+   o Rl-- — No religious identification
+
+   o Cu++ Rl-- — Strongly cultural, not religiously identified
+
+6.15. Identity: Relationship to G-d
+
+   Code  Meaning
+       ----  -------------------
+       G     Relationship to G-d
+
+       Expression  Meaning
+       ----------  ----------------------------
+       G++         Strong relationship / belief
+       G+          Believer
+       G           Baseline
+       G-          Agnostic / distant
+       G--         Atheist
+       G?          Questioning
+       G*          Complicated
+       G#          Decline to state
+
+   This code is independent of practice.
+
+6.16. Israel
+
+   Code  Meaning
+       ----  ----------------------
+       Il    Relationship to Israel
+
+   Examples:
+
+   o Il++ — Strong connection
+
+   o Il+ — Positive connection
+
+   o Il- — Distant or ambivalent
+
+   o Il-- — No connection or negative
+
+   o Il* — Complicated relationship (very common)
+
+   o Il*! — Complicated and intense
+
+6.17. Zionism
+
+   Code  Meaning
+       ----  -------
+       Z     Zionism
+
+   Examples:
+
+   o Z++ — Strongly Zionist
+
+   o Z+ — Zionist
+
+   o Z- — Non-Zionist
+
+   o Z-- — Anti-Zionist
+
+   o Z? — Uncertain or questioning
+
+   o Z* — Complicated
+
+   Israel and Zionism are separate axes. All combinations are valid.
+
+7. Parsing
+
+
+7.1. Tokenization
+
+   Blocks are tokenized by splitting on whitespace. Each token is parsed
+   according to the grammar in Section 5.1.
+
+7.2. CamelCase Parsing
+
+   Within a token, codes are delimited by capital letters. Each
+   uppercase letter begins a new code; lowercase letters continue the
+   current code.
+
+7.3. Unknown Codes
+
+   Version 1.0 defines a closed vocabulary. Implementations SHOULD
+   reject tokens containing unknown codes.
+
+   Sub-specifiers (after :) remain open. Implementations SHOULD accept
+   unlisted sub-specifiers.
+
+7.4. Structural Requirements
+
+   Blocks MUST contain at least 3 tokens.
+
+   The distinction between structural validity and semantic validity is
+   intentional. A block may be structurally valid under this
+   specification while being rejected by a particular implementation's
+   policy.
+
+8. Semantics
+
+
+8.1. Subjectivity
+
+   All values in an identity block represent the author's subjective
+   self-assessment.
+
+   Modifier values (e.g., + vs ++) are relative to the author's own
+   reference frame. The same notation from different authors may
+   indicate different objective states.
+
+8.2. No Semantic Equivalence
+
+   This specification does not define semantic equivalence between
+   blocks.
+
+   Two blocks with identical content from different authors do not
+   necessarily describe equivalent identities.
+
+8.3. Order Preservation
+
+   Order within tokens is meaningful and MUST be preserved.
+   Implementations MUST NOT normalize or reorder expressions.
+
+8.4. Values Are Not Verifiable
+
+   Assertions in identity blocks are not independently verifiable.
+
+   Implementations MUST NOT treat identity blocks as verified identity
+   claims.
+
+9. Examples
+
+
+9.1. Basic Example
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bj O+ K+ Sh+ Ho- Pr+ He:Mo+ Tx+ Lg:HeYi Cm+ Cu++ Rl+ G+ Il+ Z?
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code     Meaning
+       -------  ------------------------------
+       Bj       Born Jewish (matrilineal)
+       O+       Orthodox, positive identific..
+       K+       Keeps kosher
+       Sh+      Shabbat observant
+       Ho-      Loosely observant of holidays
+       Pr+      Regular prayer practice
+       He:Mo+   Strong Modern Hebrew
+       Tx+      Textually knowledgeable
+       Lg:HeYi  Speaks Hebrew and Yiddish
+       Cm+      Community involved
+       Cu++     Very strong cultural identif..
+       Rl+      Strong religious identificat..
+       G+       Believer
+       Il+      Positive relationship with I..
+       Z?       Uncertain about Zionism
+
+9.2. Mixed Heritage
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bj ^As|Se OC+ K+ Sh+ Ho+ Cu++ Il*
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code     Meaning
+       -------  ------------------------------
+       Bj       Born Jewish
+       ^As\|Se  Ashkenazi on one side, Sepha..
+       OC+      Conservadox, positive identi..
+       K+       Keeps kosher
+       Sh+      Shabbat observant
+       Ho+      Holiday observant
+       Cu++     Very strong cultural identif..
+       Il*      Complicated relationship wit..
+
+9.3. Transition
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bj ^S>O:Mo As K++>+++ Sh++ Ho++ Pr++ Tx+>++ Cu+ Rl+++ G++ Il++
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code        Meaning
+       ----------  ------------------------------
+       Bj          Born Jewish
+       ^S>O:Mo  Family Secular, became Moder..
+       As          Ashkenazi
+       K++>+++  Very kosher, becoming stricter
+       Sh++        Very Shabbat observant
+       Ho++        Very holiday observant
+       Pr++        Very committed prayer practice
+       Tx+>++   Textually knowledgeable, inc..
+       Cu+         Culturally identified
+       Rl+++       Extremely strong religious i..
+       G++         Strong believer
+       Il++        Strong relationship with Isr..
+
+9.4. Contextual
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bj O|C As K+(-) Sh+(--) Ho+ Pr+ Cu+ Rl+ G? Il*!
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code     Meaning
+       -------  ------------------------------
+       Bj       Born Jewish
+       O\|C     Orthodox or Conservative dep..
+       As       Ashkenazi
+       K+(-)    Kosher normally, not under c..
+       Sh+(--)  Shabbat observant, completel..
+       Ho+      Holiday observant
+       Pr+      Regular prayer practice
+       Cu+      Culturally identified
+       Rl+      Religiously identified
+       G?       Questioning relationship to ..
+       Il*!     Complicated and intense rela..
+
+9.5. Decline to State
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   B# D# As K+ Sh+ Ho+ Cu++ Rl+ G#
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code  Meaning
+       ----  ------------------------------
+       B#    Background: decline to state
+       D#    Denomination: decline to state
+       As    Ashkenazi
+       K+    Keeps kosher
+       Sh+   Shabbat observant
+       Ho+   Holiday observant
+       Cu++  Very strong cultural identif..
+       Rl+   Strong religious identificat..
+       G#    Relationship to G-d: decline..
+
+9.6. Jew-ish
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Ji+ Bp As ^O S K~ Ho~ Cm- Cu+ Rl- G? Il- Z-
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code  Meaning
+       ----  ------------------------------
+       Ji+   Jew-ish, positive about casu..
+       Bp    Patrilineal
+       As    Ashkenazi
+       ^O S  Family Orthodox, individual ..
+       K~    Kosher-ish
+       Ho~   Holidays-ish
+       Cm-   Peripherally community invol..
+       Cu+   Culturally identified
+       Rl-   Weak religious identification
+       G?    Questioning relationship to ..
+       Il-   Distant relationship with Is..
+       Z-    Not Zionist
+
+9.7. Complex Grouping
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   B# ^[~O]|C>Pd [As|Mi]+ K+(-) ~ShHo Pr*! He:MoBi++ Tx++ Cu++! G?(!!)
+   Il*! Z*
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code            Meaning
+       --------------  ------------------------------
+       B#              Background: decline to state
+       ^[~O]\|C>Pd  Family was approximately-Ort..
+       [As\|Mi]+       Ashkenazi or Mizrachi depend..
+       K+(-)           Kosher normally, not under c..
+       ~ShHo           Approximately Shabbat-and-Ho..
+       Pr*!            Prayer practice is complicat..
+       He:MoBi++       Modern and Biblical Hebrew, ..
+       Tx++            Very textually knowledgeable
+       Cu++!           Very strong cultural identif..
+       G?(!!)          Questioning relationship to ..
+       Il*!            Complicated and intense rela..
+       Z*              Complicated stance toward Zi..
+
+9.8. Communal Context
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bj ^O @C R+ As K+ Sh~ @Ho++ Ho+ Cm+ Cu++ Il+
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code   Meaning
+       -----  ------------------------------
+       Bj     Born Jewish
+       ^O     Family context Orthodox
+       @C     Community context Conservative
+       R+     Identifies as Reform, positi..
+       As     Ashkenazi
+       K+     Keeps kosher
+       Sh~    Shabbat observance approximate
+       @Ho++  Community very holiday-obser..
+       Ho+    Individual holiday observant
+       Cm+    Community involved
+       Cu++   Strong cultural identification
+       Il+    Positive relationship with I..
+
+   This example shows someone whose family, community, and personal
+   identifications span three different denominations — a common pattern
+   in American Jewish life.
+
+9.9. Mixed Contexts
+
+   -----BEGIN JEW CODE BLOCK----- Version: 1.0
+
+   Bc:R ^@O @In+ As|Se K+ Sh+ Pr++ Cm++ Cu+ Rl++
+
+   -----END JEW CODE BLOCK-----
+
+   Interpretation:
+
+       Code    Meaning
+       ------  ------------------------------
+       Bc:R    Convert through Reform
+       ^@O     Family's community context w..
+       @In+    Currently in an independent ..
+       As\|Se  Ashkenazi or Sephardi depend..
+       K+      Keeps kosher
+       Sh+     Shabbat observant
+       Pr++    Very engaged with prayer
+       Cm++    Very community involved
+       Cu+     Culturally identified
+       Rl++    Strong religious identificat..
+
+   The ^@O pattern combines family and communal scope — "the community
+   my family was part of."
+
+10. Security Considerations
+
+   Identity blocks are self-attested and unverified.
+
+   o They MUST NOT be used as the sole basis for authorization
+     decisions.
+
+   o They MUST NOT be treated as proof of Jewish status.
+
+   o They MAY be used as input to systems that do not require
+     verification.
+
+   The # (decline to state) modifier exists specifically because certain
+   information is private. Systems processing identity blocks MUST NOT
+   penalize or flag codes using this modifier.
+
+11. Acknowledgements
+
+   The authors thank the DEP Working Group for review and feedback.
+
+   This specification draws inspiration from the Geek Code, created by
+   Robert A. Hayden (5753).
+
+12. Discussion Archive
+
+   Working group discussions related to this specification are archived
+   at the dep-identity mailing list.
+
+   Key threads include:
+
+   o The Geek Code discovery
+
+   o Self-attestation
+
+   o Modifier semantics
+
+   o Case significance
+
+   o The decline-to-state modifier
+
+   o Family structure and the ^X|Y pattern
+
+   o Grammar formalization
+
+   o Communal context and the @ marker
+
+   o Soviet Jewry as heritage category (pending)
+
+
+Authors' Addresses
+
+   DEP Working Group

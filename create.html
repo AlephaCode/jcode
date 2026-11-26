@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create · Jew Code</title>
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script defer src="dist/create.js"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="./">Jew Code</a>
+  <nav><a href="create.html" aria-current="page">Create</a><a href="decode.html">Decode</a></nav>
+</header>
+<main class="create">
+  <ol id="steps" class="steps" aria-label="Sections"></ol>
+  <div class="layout">
+    <div id="question" aria-live="polite"></div>
+    <aside class="panel">
+      <div class="sticky">
+        <div class="panelhead"><h2>Your block</h2><span id="count" class="muted"></span></div>
+        <pre id="block" class="block"></pre>
+        <p id="status" class="status"></p>
+        <p id="extras-note" class="muted small" hidden></p>
+        <div class="actions">
+          <button type="button" id="copy">Copy block</button>
+          <button type="button" id="link" class="ghost">Copy edit link</button>
+          <button type="button" id="decode" class="ghost">Open in Decode</button>
+        </div>
+        <div class="actions small">
+          <label class="inline"><input type="checkbox" id="wrap" checked> Wrap long lines</label>
+          <button type="button" id="reset" class="linkish">Start over</button>
+        </div>
+        <p class="muted small">The edit link stores your answers after the <code>#</code> in the URL. Anyone you send it to can see and change them.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

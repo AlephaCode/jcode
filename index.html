@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jew Code</title>
+<meta name="description" content="Create, decode and edit Jew Code blocks (DEP-0248) in your browser.">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="./">Jew Code</a>
+  <nav><a href="create.html">Create</a><a href="decode.html">Decode</a></nav>
+</header>
+<main class="home">
+  <h1>Jew Code</h1>
+  <p class="lede">A short, structured way to describe your relationship to Jewish identity, practice and culture,
+    defined by <a href="https://dep-specs.org/specs/rfc0248.html">DEP-0248</a>. These pages help you write one
+    and read other people's.</p>
+<pre class="block sample" aria-label="Example block">-----BEGIN JEW CODE BLOCK-----
+Version: 1.0
+
+Bj O+ K+ Sh+ Ho- Pr+ He:Mo+ Tx+
+Lg:HeYi Cm+ Cu++ Rl+ G+ Il+ Z?
+
+-----END JEW CODE BLOCK-----</pre>
+  <div class="choices">
+    <a class="choice" href="create.html">
+      <strong>Create</strong>
+      <span>Answer a series of questions and your block is built as you go. Skip anything you'd rather not say.</span>
+    </a>
+    <a class="choice" href="decode.html">
+      <strong>Decode</strong>
+      <span>Paste a block to read it in plain English. You can also open it in Create to edit it.</span>
+    </a>
+  </div>
+  <p class="muted small">Everything runs in your browser. Your answers aren't sent anywhere. Share links keep them in the
+    part of the URL after <code>#</code>, which browsers don't send to the server.</p>
+</main>
+<footer class="site">
+  <p>A browser port of omer's <a href="https://fergie.omer.land/omer/jewcodegen">jewcodegen</a> (Apache-2.0).
+    Per the spec, a block is self-reported and subjective. It isn't proof of anything.</p>
+</footer>
+</body>
+</html>

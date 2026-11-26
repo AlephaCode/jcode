@@ -1,0 +1,18 @@
+jcode — a browser version of jewcodegen
+
+This product includes software derived from jewcodegen
+(https://fergie.omer.land/omer/jewcodegen), licensed under the Apache License,
+Version 2.0. See LICENSE.
+
+Changes from the original:
+- js/jewcode.js is a JavaScript port of pkg/jcg/jewcode (Go). The token builder,
+  validation, addition/grouping logic and block rendering follow the original
+  function by function. Representation changes: levels are stored as their
+  modifier string (null = omitted) and profiles are plain objects. renderBlock
+  can optionally wrap long lines.
+- js/wizard.js reimplements the question flow of pkg/jcg/wizard as a web page.
+  The Hebrew and language level questions follow their own questions instead of
+  coming at the end of the stage.
+- test/jewcode.test.mjs ports the original Go test cases.
+- New, not in the original: js/parse.js (block → answers, for editing a decoded
+  block), js/state.js (share links), js/decode.js (decode page).

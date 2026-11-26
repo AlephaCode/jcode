@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decode · Jew Code</title>
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script defer src="dist/decode.js"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="./">Jew Code</a>
+  <nav><a href="create.html">Create</a><a href="decode.html" aria-current="page">Decode</a></nav>
+</header>
+<main class="decode">
+  <h1>Decode a block</h1>
+  <p class="lede">Paste a block, or just some tokens, to read it token by token. Then open it in Create to change any answer.</p>
+  <label for="input" class="sr-only">Block to decode</label>
+  <textarea id="input" rows="9" spellcheck="false" autocomplete="off" placeholder="-----BEGIN JEW CODE BLOCK-----&#10;Version: 1.0&#10;&#10;Bj O+ K+ Sh+ ...&#10;&#10;-----END JEW CODE BLOCK-----"></textarea>
+  <div class="actions">
+    <a id="edit" class="button" hidden>Edit in Create →</a>
+    <span class="muted small">Try an example:</span>
+    <button type="button" class="linkish" data-example="spec">simple</button>
+    <button type="button" class="linkish" data-example="complex">with context and nuance</button>
+  </div>
+  <div id="result"></div>
+</main>
+</body>
+</html>

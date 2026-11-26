@@ -1,0 +1,9 @@
+{
+  "name": "jcode",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/bundle.mjs",
+    "test": "node --test"
+  }
+}
